@@ -19,17 +19,23 @@ export const SERVICE_DURATIONS: Record<ServiceType, number> = {
   "Full Package": 90,
 };
 
-export function useCustomers() {
+export function useCustomers(salonId?: string) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  // Fetch customers
+  // Fetch customers for specific salon
   const fetchCustomers = async () => {
+    if (!salonId) {
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       const { data, error } = await supabase
         .from("customers")
         .select("*")
+        .eq("salon_id", salonId)
         .order("queue_number", { ascending: true });
 
       if (error) throw error;
@@ -47,11 +53,21 @@ export function useCustomers() {
 
   // Add customer
   const addCustomer = async (name: string, serviceType: ServiceType) => {
+    if (!salonId) {
+      toast({
+        title: "Error",
+        description: "No salon selected",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       const { error } = await supabase.from("customers").insert({
         customer_name: name.trim(),
         service_type: serviceType,
         estimated_duration_minutes: SERVICE_DURATIONS[serviceType],
+        salon_id: salonId,
       });
 
       if (error) throw error;
@@ -136,27 +152,30 @@ export function useCustomers() {
 
   // Subscribe to realtime updates
   useEffect(() => {
-    fetchCustomers();
+    if (salonId) {
+      fetchCustomers();
 
-    const channel = supabase
-      .channel("customers-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "customers",
-        },
-        () => {
-          fetchCustomers();
-        }
-      )
-      .subscribe();
+      const channel = supabase
+        .channel(`customers-changes-${salonId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "customers",
+            filter: `salon_id=eq.${salonId}`,
+          },
+          () => {
+            fetchCustomers();
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [salonId]);
 
   return {
     customers,

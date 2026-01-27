@@ -4,6 +4,7 @@ import { AddCustomerForm } from "@/components/AddCustomerForm";
 import { QueueList } from "@/components/QueueList";
 import { QueueStats } from "@/components/QueueStats";
 import { SalonQRCode } from "@/components/SalonQRCode";
+import { DisplayLinks } from "@/components/DisplayLinks";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useSalons } from "@/hooks/useSalons";
 import { useAuth } from "@/hooks/useAuth";
@@ -62,9 +63,10 @@ export function StaffDashboard() {
       <main className="container mx-auto px-4 py-6 space-y-6">
         <QueueStats customers={customers} />
         
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <AddCustomerForm onAddCustomer={addCustomer} />
           <SalonQRCode salonId={mySalon.id} salonName={mySalon.name} />
+          <DisplayLinks salonId={mySalon.id} />
         </div>
         
         <QueueList

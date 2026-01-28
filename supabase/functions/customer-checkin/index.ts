@@ -9,6 +9,8 @@ interface CheckinRequest {
   salon_id: string;
   customer_name: string;
   service_type: "Haircut" | "Shave" | "Facial" | "Hair Color" | "Beard Trim" | "Full Package";
+  phone_number?: string;
+  require_approval?: boolean;
 }
 
 const SERVICE_DURATIONS: Record<string, number> = {
@@ -32,7 +34,7 @@ Deno.serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { salon_id, customer_name, service_type }: CheckinRequest = await req.json();
+    const { salon_id, customer_name, service_type, phone_number, require_approval }: CheckinRequest = await req.json();
 
     // Validate inputs
     if (!salon_id || !customer_name || !service_type) {
@@ -59,10 +61,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Verify salon exists
+    // Verify salon exists and check status
     const { data: salon, error: salonError } = await supabase
       .from("salons")
-      .select("id, name")
+      .select("id, name, is_open, is_queue_paused")
       .eq("id", salon_id)
       .single();
 
@@ -70,6 +72,22 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Salon not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check if salon is open
+    if (salon.is_open === false) {
+      return new Response(
+        JSON.stringify({ error: "Salon is currently closed" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check if queue is paused
+    if (salon.is_queue_paused === true) {
+      return new Response(
+        JSON.stringify({ error: "Queue is temporarily paused" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -81,6 +99,8 @@ Deno.serve(async (req) => {
         service_type,
         estimated_duration_minutes: SERVICE_DURATIONS[service_type],
         salon_id,
+        phone_number: phone_number?.trim() || null,
+        request_status: require_approval ? "pending" : "approved",
       })
       .select()
       .single();
@@ -99,6 +119,7 @@ Deno.serve(async (req) => {
         queue_number: customer.queue_number,
         salon_name: salon.name,
         estimated_duration: SERVICE_DURATIONS[service_type],
+        request_status: require_approval ? "pending" : "approved",
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

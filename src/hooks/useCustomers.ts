@@ -6,8 +6,9 @@ import type { Database } from "@/integrations/supabase/types";
 type Customer = Database["public"]["Tables"]["customers"]["Row"];
 type ServiceType = Database["public"]["Enums"]["service_type"];
 type QueueStatus = Database["public"]["Enums"]["queue_status"];
+type QueueRequestStatus = Database["public"]["Enums"]["queue_request_status"];
 
-export type { Customer, ServiceType, QueueStatus };
+export type { Customer, ServiceType, QueueStatus, QueueRequestStatus };
 
 // Service duration in minutes based on type
 export const SERVICE_DURATIONS: Record<ServiceType, number> = {
@@ -108,6 +109,52 @@ export function useCustomers(salonId?: string) {
     }
   };
 
+  // Approve queue request
+  const approveRequest = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("customers")
+        .update({ request_status: "approved" as QueueRequestStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Request approved",
+        description: "Customer has been added to the queue.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error approving request",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Reject queue request
+  const rejectRequest = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("customers")
+        .update({ request_status: "rejected" as QueueRequestStatus, status: "Done" as QueueStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Request rejected",
+        description: "The queue request has been rejected.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error rejecting request",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   // Remove customer
   const removeCustomer = async (id: string, name: string) => {
     try {
@@ -182,6 +229,8 @@ export function useCustomers(salonId?: string) {
     isLoading,
     addCustomer,
     updateStatus,
+    approveRequest,
+    rejectRequest,
     removeCustomer,
     getEstimatedWaitTime,
   };

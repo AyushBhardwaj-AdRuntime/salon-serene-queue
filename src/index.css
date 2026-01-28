@@ -53,6 +53,12 @@
     --status-serving-foreground: 0 0% 100%;
     --status-done: 220 13% 60%;
     --status-done-foreground: 0 0% 100%;
+    --status-pending: 38 92% 50%;
+    --status-pending-foreground: 25 25% 15%;
+    --status-rejected: 0 72% 51%;
+    --status-rejected-foreground: 0 0% 100%;
+    --status-open: 142 71% 45%;
+    --status-closed: 0 72% 51%;
 
     /* Sidebar */
     --sidebar-background: 30 25% 96%;

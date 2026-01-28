@@ -1,34 +1,58 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { AddCustomerForm } from "@/components/AddCustomerForm";
 import { QueueList } from "@/components/QueueList";
 import { QueueStats } from "@/components/QueueStats";
 import { SalonQRCode } from "@/components/SalonQRCode";
 import { DisplayLinks } from "@/components/DisplayLinks";
+import { PendingRequests } from "@/components/PendingRequests";
+import { SalonSettings } from "@/components/SalonSettings";
+import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
+import { AppointmentList } from "@/components/AppointmentList";
 import { useCustomers } from "@/hooks/useCustomers";
+import { useAppointments } from "@/hooks/useAppointments";
 import { useSalons } from "@/hooks/useSalons";
 import { useAuth } from "@/hooks/useAuth";
 import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 import { Button } from "@/components/ui/button";
-import { LogOut, Store } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LogOut, Store, Users, Calendar, BarChart, Settings } from "lucide-react";
 
 export function StaffDashboard() {
   const { user, signOut } = useAuth();
   const { mySalon, fetchMySalon, isLoading: salonsLoading } = useSalons();
-  const { 
-    customers, 
-    isLoading: customersLoading, 
-    addCustomer, 
-    updateStatus, 
-    removeCustomer, 
-    getEstimatedWaitTime 
+  const {
+    customers,
+    isLoading: customersLoading,
+    addCustomer,
+    updateStatus,
+    approveRequest,
+    rejectRequest,
+    removeCustomer,
+    getEstimatedWaitTime,
   } = useCustomers(mySalon?.id);
+
+  const {
+    appointments,
+    isLoading: appointmentsLoading,
+    updateAppointmentStatus,
+    cancelAppointment,
+  } = useAppointments(mySalon?.id);
+
+  const [activeTab, setActiveTab] = useState("queue");
 
   useEffect(() => {
     if (user) {
       fetchMySalon(user.id);
     }
   }, [user]);
+
+  // Refetch salon after settings update
+  const handleSettingsUpdate = () => {
+    if (user) {
+      fetchMySalon(user.id);
+    }
+  };
 
   if (salonsLoading) {
     return (
@@ -45,6 +69,11 @@ export function StaffDashboard() {
     return <RegisterSalonForm />;
   }
 
+  // Filter to only show approved customers in queue
+  const approvedCustomers = customers.filter(
+    (c) => (c as any).request_status === "approved"
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b sticky top-0 z-10">
@@ -60,22 +89,81 @@ export function StaffDashboard() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        <QueueStats customers={customers} />
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <AddCustomerForm onAddCustomer={addCustomer} />
-          <SalonQRCode salonId={mySalon.id} salonName={mySalon.name} />
-          <DisplayLinks salonId={mySalon.id} />
-        </div>
-        
-        <QueueList
-          customers={customers}
-          isLoading={customersLoading}
-          onUpdateStatus={updateStatus}
-          onRemove={removeCustomer}
-          getEstimatedWaitTime={getEstimatedWaitTime}
-        />
+      <main className="container mx-auto px-4 py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="queue" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span className="hidden sm:inline">Queue</span>
+            </TabsTrigger>
+            <TabsTrigger value="appointments" className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span className="hidden sm:inline">Appointments</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart className="w-4 h-4" />
+              <span className="hidden sm:inline">Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Settings</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Queue Tab */}
+          <TabsContent value="queue" className="space-y-6">
+            <QueueStats customers={approvedCustomers} />
+
+            {/* Pending Requests */}
+            <PendingRequests
+              customers={customers}
+              onApprove={approveRequest}
+              onReject={rejectRequest}
+            />
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <AddCustomerForm onAddCustomer={addCustomer} />
+              <SalonQRCode salonId={mySalon.id} salonName={mySalon.name} />
+              <DisplayLinks salonId={mySalon.id} />
+            </div>
+
+            <QueueList
+              customers={approvedCustomers}
+              isLoading={customersLoading}
+              onUpdateStatus={updateStatus}
+              onRemove={removeCustomer}
+              getEstimatedWaitTime={getEstimatedWaitTime}
+            />
+          </TabsContent>
+
+          {/* Appointments Tab */}
+          <TabsContent value="appointments">
+            <AppointmentList
+              appointments={appointments}
+              onUpdateStatus={updateAppointmentStatus}
+              onCancel={cancelAppointment}
+            />
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics">
+            <AnalyticsDashboard salonId={mySalon.id} />
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <SalonSettings
+                salon={mySalon as any}
+                onUpdate={handleSettingsUpdate}
+              />
+              <div className="space-y-6">
+                <SalonQRCode salonId={mySalon.id} salonName={mySalon.name} />
+                <DisplayLinks salonId={mySalon.id} />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

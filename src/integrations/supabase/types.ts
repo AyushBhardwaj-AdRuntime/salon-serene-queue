@@ -14,13 +14,103 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_daily: {
+        Row: {
+          avg_wait_time_minutes: number | null
+          created_at: string
+          date: string
+          id: string
+          peak_hour: number | null
+          salon_id: string
+          total_customers: number
+        }
+        Insert: {
+          avg_wait_time_minutes?: number | null
+          created_at?: string
+          date: string
+          id?: string
+          peak_hour?: number | null
+          salon_id: string
+          total_customers?: number
+        }
+        Update: {
+          avg_wait_time_minutes?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          peak_hour?: number | null
+          salon_id?: string
+          total_customers?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_daily_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      appointments: {
+        Row: {
+          appointment_time: string
+          created_at: string
+          customer_name: string
+          estimated_duration_minutes: number
+          id: string
+          notes: string | null
+          phone_number: string | null
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+          status: Database["public"]["Enums"]["appointment_status"]
+          updated_at: string
+        }
+        Insert: {
+          appointment_time: string
+          created_at?: string
+          customer_name: string
+          estimated_duration_minutes?: number
+          id?: string
+          notes?: string | null
+          phone_number?: string | null
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Update: {
+          appointment_time?: string
+          created_at?: string
+          customer_name?: string
+          estimated_duration_minutes?: number
+          id?: string
+          notes?: string | null
+          phone_number?: string | null
+          salon_id?: string
+          service_type?: Database["public"]["Enums"]["service_type"]
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           created_at: string
           customer_name: string
           estimated_duration_minutes: number
           id: string
+          phone_number: string | null
           queue_number: number
+          request_status: Database["public"]["Enums"]["queue_request_status"]
           salon_id: string | null
           service_type: Database["public"]["Enums"]["service_type"]
           status: Database["public"]["Enums"]["queue_status"]
@@ -31,7 +121,9 @@ export type Database = {
           customer_name: string
           estimated_duration_minutes?: number
           id?: string
+          phone_number?: string | null
           queue_number?: number
+          request_status?: Database["public"]["Enums"]["queue_request_status"]
           salon_id?: string | null
           service_type: Database["public"]["Enums"]["service_type"]
           status?: Database["public"]["Enums"]["queue_status"]
@@ -42,7 +134,9 @@ export type Database = {
           customer_name?: string
           estimated_duration_minutes?: number
           id?: string
+          phone_number?: string | null
           queue_number?: number
+          request_status?: Database["public"]["Enums"]["queue_request_status"]
           salon_id?: string | null
           service_type?: Database["public"]["Enums"]["service_type"]
           status?: Database["public"]["Enums"]["queue_status"]
@@ -51,6 +145,86 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "customers_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hourly_analytics: {
+        Row: {
+          created_at: string
+          customer_count: number
+          date: string
+          hour: number
+          id: string
+          salon_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_count?: number
+          date: string
+          hour: number
+          id?: string
+          salon_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_count?: number
+          date?: string
+          hour?: number
+          id?: string
+          salon_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hourly_analytics_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ratings: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          customer_name: string | null
+          feedback: string | null
+          id: string
+          rating: number
+          salon_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          customer_name?: string | null
+          feedback?: string | null
+          id?: string
+          rating: number
+          salon_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          customer_name?: string | null
+          feedback?: string | null
+          id?: string
+          rating?: number
+          salon_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ratings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ratings_salon_id_fkey"
             columns: ["salon_id"]
             isOneToOne: false
             referencedRelation: "salons"
@@ -90,47 +264,106 @@ export type Database = {
       salons: {
         Row: {
           address: string | null
+          closing_time: string | null
           created_at: string
           id: string
+          is_open: boolean
+          is_queue_paused: boolean
           latitude: number | null
           longitude: number | null
           name: string
+          opening_time: string | null
           owner_id: string
+          priority_mode: string
           updated_at: string
         }
         Insert: {
           address?: string | null
+          closing_time?: string | null
           created_at?: string
           id?: string
+          is_open?: boolean
+          is_queue_paused?: boolean
           latitude?: number | null
           longitude?: number | null
           name: string
+          opening_time?: string | null
           owner_id: string
+          priority_mode?: string
           updated_at?: string
         }
         Update: {
           address?: string | null
+          closing_time?: string | null
           created_at?: string
           id?: string
+          is_open?: boolean
+          is_queue_paused?: boolean
           latitude?: number | null
           longitude?: number | null
           name?: string
+          opening_time?: string | null
           owner_id?: string
+          priority_mode?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      service_analytics: {
+        Row: {
+          count: number
+          created_at: string
+          date: string
+          id: string
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+        }
+        Insert: {
+          count?: number
+          created_at?: string
+          date: string
+          id?: string
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+        }
+        Update: {
+          count?: number
+          created_at?: string
+          date?: string
+          id?: string
+          salon_id?: string
+          service_type?: Database["public"]["Enums"]["service_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_analytics_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      get_salon_avg_rating: { Args: { salon_uuid: string }; Returns: number }
+      get_salon_rating_count: { Args: { salon_uuid: string }; Returns: number }
       is_salon_staff: {
         Args: { _salon_id: string; _user_id: string }
         Returns: boolean
       }
     }
     Enums: {
+      appointment_status:
+        | "scheduled"
+        | "confirmed"
+        | "completed"
+        | "cancelled"
+        | "no_show"
+      queue_request_status: "pending" | "approved" | "rejected"
       queue_status: "Waiting" | "Serving" | "Done"
       service_type:
         | "Haircut"
@@ -266,6 +499,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      appointment_status: [
+        "scheduled",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
+      queue_request_status: ["pending", "approved", "rejected"],
       queue_status: ["Waiting", "Serving", "Done"],
       service_type: [
         "Haircut",

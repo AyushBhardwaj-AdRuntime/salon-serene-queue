@@ -9,6 +9,7 @@ import { PendingRequests } from "@/components/PendingRequests";
 import { SalonSettings } from "@/components/SalonSettings";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { AppointmentList } from "@/components/AppointmentList";
+import { LoyaltyManagement } from "@/components/LoyaltyManagement";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useSalons } from "@/hooks/useSalons";
@@ -16,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Store, Users, Calendar, BarChart, Settings } from "lucide-react";
+import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift } from "lucide-react";
 
 export function StaffDashboard() {
   const { user, signOut } = useAuth();
@@ -91,7 +92,7 @@ export function StaffDashboard() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="queue" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               <span className="hidden sm:inline">Queue</span>
@@ -99,6 +100,10 @@ export function StaffDashboard() {
             <TabsTrigger value="appointments" className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               <span className="hidden sm:inline">Appointments</span>
+            </TabsTrigger>
+            <TabsTrigger value="loyalty" className="flex items-center gap-2">
+              <Gift className="w-4 h-4" />
+              <span className="hidden sm:inline">Loyalty</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart className="w-4 h-4" />
@@ -133,6 +138,7 @@ export function StaffDashboard() {
               onUpdateStatus={updateStatus}
               onRemove={removeCustomer}
               getEstimatedWaitTime={getEstimatedWaitTime}
+              salonId={mySalon.id}
             />
           </TabsContent>
 
@@ -143,6 +149,11 @@ export function StaffDashboard() {
               onUpdateStatus={updateAppointmentStatus}
               onCancel={cancelAppointment}
             />
+          </TabsContent>
+
+          {/* Loyalty Tab */}
+          <TabsContent value="loyalty">
+            <LoyaltyManagement salonId={mySalon.id} />
           </TabsContent>
 
           {/* Analytics Tab */}

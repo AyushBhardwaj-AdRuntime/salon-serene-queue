@@ -8,6 +8,7 @@ interface QueueListProps {
   getEstimatedWaitTime: (customer: Customer) => number;
   onUpdateStatus: (id: string, status: QueueStatus) => Promise<void>;
   onRemove: (id: string, name: string) => Promise<void>;
+  salonId?: string;
 }
 
 export function QueueList({
@@ -16,6 +17,7 @@ export function QueueList({
   getEstimatedWaitTime,
   onUpdateStatus,
   onRemove,
+  salonId,
 }: QueueListProps) {
   if (isLoading) {
     return (
@@ -59,6 +61,7 @@ export function QueueList({
             estimatedWait={getEstimatedWaitTime(customer)}
             onUpdateStatus={onUpdateStatus}
             onRemove={onRemove}
+            salonId={salonId}
           />
         </div>
       ))}

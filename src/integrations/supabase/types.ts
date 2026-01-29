@@ -187,6 +187,50 @@ export type Database = {
           },
         ]
       }
+      loyalty_members: {
+        Row: {
+          created_at: string
+          customer_name: string
+          id: string
+          lifetime_points: number
+          phone_number: string
+          salon_id: string
+          total_points: number
+          total_visits: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          id?: string
+          lifetime_points?: number
+          phone_number: string
+          salon_id: string
+          total_points?: number
+          total_visits?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          id?: string
+          lifetime_points?: number
+          phone_number?: string
+          salon_id?: string
+          total_points?: number
+          total_visits?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_members_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ratings: {
         Row: {
           created_at: string
@@ -225,6 +269,99 @@ export type Database = {
           },
           {
             foreignKeyName: "ratings_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_redemptions: {
+        Row: {
+          id: string
+          loyalty_member_id: string
+          points_used: number
+          redeemed_at: string
+          reward_id: string
+          salon_id: string
+          status: string
+        }
+        Insert: {
+          id?: string
+          loyalty_member_id: string
+          points_used: number
+          redeemed_at?: string
+          reward_id: string
+          salon_id: string
+          status?: string
+        }
+        Update: {
+          id?: string
+          loyalty_member_id?: string
+          points_used?: number
+          redeemed_at?: string
+          reward_id?: string
+          salon_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_redemptions_loyalty_member_id_fkey"
+            columns: ["loyalty_member_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_redemptions_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "rewards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_redemptions_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rewards: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          points_required: number
+          salon_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          points_required: number
+          salon_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          points_required?: number
+          salon_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rewards_salon_id_fkey"
             columns: ["salon_id"]
             isOneToOne: false
             referencedRelation: "salons"
@@ -337,6 +474,64 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "service_analytics_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visit_history: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          id: string
+          loyalty_member_id: string
+          notes: string | null
+          points_earned: number
+          salon_id: string
+          service_type: string
+          visit_date: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          loyalty_member_id: string
+          notes?: string | null
+          points_earned?: number
+          salon_id: string
+          service_type: string
+          visit_date?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          loyalty_member_id?: string
+          notes?: string | null
+          points_earned?: number
+          salon_id?: string
+          service_type?: string
+          visit_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visit_history_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visit_history_loyalty_member_id_fkey"
+            columns: ["loyalty_member_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visit_history_salon_id_fkey"
             columns: ["salon_id"]
             isOneToOne: false
             referencedRelation: "salons"

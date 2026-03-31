@@ -338,9 +338,9 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
               return (
                 <Card
                   key={salon.id}
-                  className={`cursor-pointer hover:shadow-md transition-shadow ${
-                    !isOpen ? "opacity-60" : ""
-                  }`}
+                  className={`cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border-l-4 ${
+                    isOpen ? "border-l-[hsl(var(--status-serving))]" : "border-l-destructive"
+                  } ${!isOpen ? "opacity-60" : ""}`}
                   onClick={() => setSelectedSalon(salon)}
                 >
                   <CardContent className="p-4">

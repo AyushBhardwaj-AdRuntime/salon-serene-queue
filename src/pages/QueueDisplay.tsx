@@ -50,6 +50,7 @@ export default function QueueDisplay() {
         .select("*")
         .eq("salon_id", salonId)
         .in("status", ["Waiting", "Serving"])
+        .eq("request_status", "approved")
         .order("queue_number", { ascending: true });
 
       setCustomers(data || []);
@@ -102,10 +103,12 @@ export default function QueueDisplay() {
   return (
     <div className="min-h-screen bg-background p-8 flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between mb-8">
+      <header className="flex items-center justify-between mb-8 bg-card/80 backdrop-blur-sm rounded-2xl p-6 border shadow-sm">
         <div className="flex items-center gap-4">
-          <Scissors className="w-12 h-12 text-primary" />
-          <h1 className="text-4xl font-bold text-foreground">{salon.name}</h1>
+          <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">
+            <Scissors className="w-8 h-8 text-primary-foreground" />
+          </div>
+          <h1 className="text-4xl font-bold font-serif text-foreground">{salon.name}</h1>
         </div>
         <div className="text-right">
           <div className="text-5xl font-mono font-bold text-foreground">
@@ -121,7 +124,7 @@ export default function QueueDisplay() {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Now Serving - Large Display */}
         <div className="lg:col-span-1">
-          <div className="bg-primary rounded-3xl p-8 h-full flex flex-col">
+          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 h-full flex flex-col shadow-2xl shadow-primary/20">
             <h2 className="text-2xl font-semibold text-primary-foreground mb-4 flex items-center gap-3">
               <div className="w-4 h-4 bg-primary-foreground rounded-full animate-pulse" />
               NOW SERVING

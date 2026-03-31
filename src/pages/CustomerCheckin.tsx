@@ -264,8 +264,10 @@ export default function CustomerCheckin() {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-md mx-auto space-y-6">
         <div className="text-center pt-8">
-          <Scissors className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-bold">{salon.name}</h1>
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/25">
+            <Scissors className="w-8 h-8 text-primary-foreground" />
+          </div>
+          <h1 className="text-2xl font-bold font-serif">{salon.name}</h1>
           {salon.address && (
             <p className="text-sm text-muted-foreground mt-1">{salon.address}</p>
           )}

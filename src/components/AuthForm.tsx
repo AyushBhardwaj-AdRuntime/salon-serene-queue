@@ -21,11 +21,7 @@ export function AuthForm() {
       if (action === "signin") {
         await signIn(email, password);
       } else {
-        const result = await signUp(email, password);
-        if (result.success) {
-          // Auto sign in after successful signup
-          await signIn(email, password);
-        }
+        await signUp(email, password);
       }
     } finally {
       setIsSubmitting(false);

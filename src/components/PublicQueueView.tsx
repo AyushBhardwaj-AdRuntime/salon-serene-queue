@@ -284,22 +284,24 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      {/* Gradient Header */}
+      <header className="relative overflow-hidden bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground sticky top-0 z-10">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA4KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNhKSIvPjwvc3ZnPg==')] opacity-50" />
+        <div className="container mx-auto px-4 py-5 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-full">
-              <Scissors className="w-6 h-6 text-primary" />
+            <div className="p-2 bg-primary-foreground/15 rounded-xl backdrop-blur-sm">
+              <Scissors className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">Nearby Salons</h1>
+              <h1 className="text-xl font-bold font-serif">Nearby Salons</h1>
               {userLocation ? (
-                <p className="text-xs text-muted-foreground">Showing salons near you</p>
+                <p className="text-xs opacity-80">Showing salons near you</p>
               ) : (
-                <p className="text-xs text-muted-foreground">Enable location for better results</p>
+                <p className="text-xs opacity-80">Enable location for better results</p>
               )}
             </div>
           </div>
-          <Button onClick={onLoginClick} variant="outline" size="sm">
+          <Button onClick={onLoginClick} variant="secondary" size="sm" className="rounded-full shadow-md">
             <LogIn className="w-4 h-4 mr-2" />
             Staff Login
           </Button>

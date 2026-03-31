@@ -103,10 +103,12 @@ export default function QueueDisplay() {
   return (
     <div className="min-h-screen bg-background p-8 flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between mb-8">
+      <header className="flex items-center justify-between mb-8 bg-card/80 backdrop-blur-sm rounded-2xl p-6 border shadow-sm">
         <div className="flex items-center gap-4">
-          <Scissors className="w-12 h-12 text-primary" />
-          <h1 className="text-4xl font-bold text-foreground">{salon.name}</h1>
+          <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">
+            <Scissors className="w-8 h-8 text-primary-foreground" />
+          </div>
+          <h1 className="text-4xl font-bold font-serif text-foreground">{salon.name}</h1>
         </div>
         <div className="text-right">
           <div className="text-5xl font-mono font-bold text-foreground">

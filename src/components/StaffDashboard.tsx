@@ -72,7 +72,7 @@ export function StaffDashboard() {
 
   // Filter to only show approved customers in queue
   const approvedCustomers = customers.filter(
-    (c) => (c as any).request_status === "approved"
+    (c) => c.request_status === "approved"
   );
 
   return (

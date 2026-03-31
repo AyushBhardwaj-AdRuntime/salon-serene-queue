@@ -54,7 +54,7 @@ export function useSalons() {
     try {
       const { data, error } = await supabase
         .from("salons")
-        .select("*, is_open, is_queue_paused, opening_time, closing_time, priority_mode")
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;

@@ -331,7 +331,7 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
             {filteredSalons.map((salon) => {
               const stats = getQueueStats(salon.id);
               const rating = salonRatings[salon.id];
-              const isOpen = (salon as any).is_open ?? true;
+              const isOpen = salon.is_open ?? true;
 
               return (
                 <Card

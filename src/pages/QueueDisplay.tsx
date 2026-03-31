@@ -50,6 +50,7 @@ export default function QueueDisplay() {
         .select("*")
         .eq("salon_id", salonId)
         .in("status", ["Waiting", "Serving"])
+        .eq("request_status", "approved")
         .order("queue_number", { ascending: true });
 
       setCustomers(data || []);

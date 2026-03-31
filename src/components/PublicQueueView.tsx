@@ -140,8 +140,8 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
           const waitB = getQueueStats(b.id).estimatedWait;
           return waitA - waitB;
         case "open":
-          const openA = (a as any).is_open ?? true;
-          const openB = (b as any).is_open ?? true;
+          const openA = a.is_open ?? true;
+          const openB = b.is_open ?? true;
           if (openA === openB) return 0;
           return openA ? -1 : 1;
         default:

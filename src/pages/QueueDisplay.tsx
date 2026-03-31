@@ -122,7 +122,7 @@ export default function QueueDisplay() {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Now Serving - Large Display */}
         <div className="lg:col-span-1">
-          <div className="bg-primary rounded-3xl p-8 h-full flex flex-col">
+          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 h-full flex flex-col shadow-2xl shadow-primary/20">
             <h2 className="text-2xl font-semibold text-primary-foreground mb-4 flex items-center gap-3">
               <div className="w-4 h-4 bg-primary-foreground rounded-full animate-pulse" />
               NOW SERVING

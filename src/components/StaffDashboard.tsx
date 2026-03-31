@@ -77,13 +77,13 @@ export function StaffDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="relative overflow-hidden bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-5 flex items-center justify-between relative z-10">
           <div>
-            <h1 className="text-xl font-bold text-foreground">{mySalon.name}</h1>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <h1 className="text-xl font-bold font-serif">{mySalon.name}</h1>
+            <p className="text-sm opacity-80">{user?.email}</p>
           </div>
-          <Button variant="outline" size="sm" onClick={signOut}>
+          <Button variant="secondary" size="sm" onClick={signOut} className="rounded-full shadow-md">
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out
           </Button>

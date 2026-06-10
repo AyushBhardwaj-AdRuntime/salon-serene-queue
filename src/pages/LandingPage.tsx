@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Scissors,
@@ -28,7 +29,8 @@ export default function LandingPage() {
             </div>
             <span className="text-lg font-serif font-bold text-foreground">SalonQ</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="ghost" size="sm" onClick={() => navigate("/salons")}>
               Find Salons
             </Button>

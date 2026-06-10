@@ -130,6 +130,7 @@ export function AuthForm() {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

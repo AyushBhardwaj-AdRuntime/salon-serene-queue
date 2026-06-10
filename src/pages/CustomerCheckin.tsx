@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Scissors, CheckCircle, Clock, ArrowLeft, Users, AlertCircle, HourglassIcon } from "lucide-react";
+import { AppHeader } from "@/components/AppHeader";
 import type { ServiceType, Customer } from "@/hooks/useCustomers";
 import { SERVICE_DURATIONS } from "@/hooks/useCustomers";
 
@@ -261,17 +262,16 @@ export default function CustomerCheckin() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-md mx-auto space-y-6">
-        <div className="text-center pt-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/25">
-            <Scissors className="w-8 h-8 text-primary-foreground" />
-          </div>
+    <div className="min-h-screen bg-background">
+      <AppHeader title="Join Queue" subtitle={salon.name} backTo="/salons" />
+      <div className="max-w-md mx-auto space-y-6 p-4">
+        <div className="text-center pt-4">
           <h1 className="text-2xl font-bold font-serif">{salon.name}</h1>
           {salon.address && (
             <p className="text-sm text-muted-foreground mt-1">{salon.address}</p>
           )}
         </div>
+
 
         <Card>
           <CardHeader>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Scissors, Clock, User } from "lucide-react";
+import { AppHeader } from "@/components/AppHeader";
 import type { Customer } from "@/hooks/useCustomers";
 
 interface Salon {
@@ -101,24 +102,23 @@ export default function QueueDisplay() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-8 flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between mb-8 bg-card/80 backdrop-blur-sm rounded-2xl p-6 border shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">
-            <Scissors className="w-8 h-8 text-primary-foreground" />
+    <div className="min-h-screen bg-background flex flex-col">
+      <AppHeader
+        title={salon.name}
+        subtitle="Live Queue Display"
+        right={
+          <div className="text-right hidden sm:block">
+            <div className="text-2xl font-mono font-bold text-foreground leading-none">
+              {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {currentTime.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" })}
+            </div>
           </div>
-          <h1 className="text-4xl font-bold font-serif text-foreground">{salon.name}</h1>
-        </div>
-        <div className="text-right">
-          <div className="text-5xl font-mono font-bold text-foreground">
-            {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-          </div>
-          <div className="text-xl text-muted-foreground">
-            {currentTime.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}
-          </div>
-        </div>
-      </header>
+        }
+      />
+      <div className="p-8 flex-1 flex flex-col">
+
 
       {/* Main Content */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -207,6 +207,7 @@ export default function QueueDisplay() {
       <footer className="mt-8 text-center text-muted-foreground">
         <p className="text-lg">Thank you for your patience!</p>
       </footer>
+      </div>
     </div>
   );
 }

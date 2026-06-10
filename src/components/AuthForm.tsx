@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, Scissors } from "lucide-react";
+import { AppHeader } from "@/components/AppHeader";
 
 export function AuthForm() {
   const [email, setEmail] = useState("");
@@ -29,7 +30,9 @@ export function AuthForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen bg-background">
+      <AppHeader title="Staff Login" backTo="/" />
+      <div className="flex items-center justify-center p-4 pt-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -127,6 +130,7 @@ export function AuthForm() {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

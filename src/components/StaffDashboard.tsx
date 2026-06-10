@@ -18,6 +18,7 @@ import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function StaffDashboard() {
   const { user, signOut } = useAuth();
@@ -83,10 +84,13 @@ export function StaffDashboard() {
             <h1 className="text-xl font-bold font-serif">{mySalon.name}</h1>
             <p className="text-sm opacity-80">{user?.email}</p>
           </div>
-          <Button variant="secondary" size="sm" onClick={signOut} className="rounded-full shadow-md">
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground" />
+            <Button variant="secondary" size="sm" onClick={signOut} className="rounded-full shadow-md">
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </header>
 

@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Scissors, ArrowLeft, Calendar, Star } from "lucide-react";
+import { AppHeader } from "@/components/AppHeader";
 
 interface Salon {
   id: string;
@@ -77,15 +78,16 @@ export default function BookAppointment() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-md mx-auto space-y-6">
-        <div className="text-center pt-8">
-          <Scissors className="w-12 h-12 text-primary mx-auto mb-4" />
+    <div className="min-h-screen bg-background">
+      <AppHeader title="Book Appointment" subtitle={salon.name} backTo="/salons" />
+      <div className="max-w-md mx-auto space-y-6 p-4">
+        <div className="text-center pt-4">
           <h1 className="text-2xl font-bold">{salon.name}</h1>
           {salon.address && (
             <p className="text-sm text-muted-foreground mt-1">{salon.address}</p>
           )}
         </div>
+
 
         <Tabs defaultValue="book">
           <TabsList className="grid w-full grid-cols-2">

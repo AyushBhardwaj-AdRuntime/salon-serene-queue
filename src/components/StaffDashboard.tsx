@@ -17,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift } from "lucide-react";
+import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift, Scissors } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function StaffDashboard() {

@@ -207,6 +207,7 @@ export default function QueueDisplay() {
       <footer className="mt-8 text-center text-muted-foreground">
         <p className="text-lg">Thank you for your patience!</p>
       </footer>
+      </div>
     </div>
   );
 }

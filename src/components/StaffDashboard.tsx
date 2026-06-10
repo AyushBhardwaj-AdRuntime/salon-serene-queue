@@ -80,10 +80,20 @@ export function StaffDashboard() {
     <div className="min-h-screen bg-background">
       <header className="relative overflow-hidden bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground sticky top-0 z-10">
         <div className="container mx-auto px-4 py-5 flex items-center justify-between relative z-10">
-          <div>
-            <h1 className="text-xl font-bold font-serif">{mySalon.name}</h1>
-            <p className="text-sm opacity-80">{user?.email}</p>
-          </div>
+          <button
+            type="button"
+            onClick={() => (window.location.href = "/")}
+            aria-label="Go to home"
+            className="flex items-center gap-3 group text-left"
+          >
+            <div className="p-2 bg-primary-foreground/15 rounded-xl backdrop-blur-sm transition-transform group-hover:scale-105">
+              <Scissors className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold font-serif">{mySalon.name}</h1>
+              <p className="text-sm opacity-80">{user?.email}</p>
+            </div>
+          </button>
           <div className="flex items-center gap-2">
             <ThemeToggle className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground" />
             <Button variant="secondary" size="sm" onClick={signOut} className="rounded-full shadow-md">

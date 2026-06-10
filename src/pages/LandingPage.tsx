@@ -47,10 +47,6 @@ export default function LandingPage() {
 
         <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-              <Sparkles className="w-4 h-4" />
-              Smart Queue Management
-            </div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground leading-tight mb-6">
               Skip the Wait,{" "}
               <span className="text-primary">Join the Queue</span>

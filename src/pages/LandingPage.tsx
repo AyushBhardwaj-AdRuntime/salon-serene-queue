@@ -227,7 +227,10 @@ export default function LandingPage() {
               Find Salons
             </button>
             <button className="hover:text-primary transition-colors" onClick={() => navigate("/login")}>
-              Staff Login
+              Salon Owner Login
+            </button>
+            <button className="opacity-60 hover:text-primary hover:opacity-100 transition" onClick={() => navigate("/admin-login")}>
+              Admin
             </button>
           </div>
         </div>

@@ -268,13 +268,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "ratings_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "public_queue"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "ratings_salon_id_fkey"
             columns: ["salon_id"]
             isOneToOne: false
@@ -531,13 +524,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "visit_history_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "public_queue"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "visit_history_loyalty_member_id_fkey"
             columns: ["loyalty_member_id"]
             isOneToOne: false
@@ -555,58 +541,23 @@ export type Database = {
       }
     }
     Views: {
-      public_queue: {
-        Row: {
-          created_at: string | null
-          estimated_duration_minutes: number | null
-          id: string | null
-          queue_number: number | null
-          request_status:
-            | Database["public"]["Enums"]["queue_request_status"]
-            | null
-          salon_id: string | null
-          service_type: Database["public"]["Enums"]["service_type"] | null
-          status: Database["public"]["Enums"]["queue_status"] | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          estimated_duration_minutes?: number | null
-          id?: string | null
-          queue_number?: number | null
-          request_status?:
-            | Database["public"]["Enums"]["queue_request_status"]
-            | null
-          salon_id?: string | null
-          service_type?: Database["public"]["Enums"]["service_type"] | null
-          status?: Database["public"]["Enums"]["queue_status"] | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          estimated_duration_minutes?: number | null
-          id?: string | null
-          queue_number?: number | null
-          request_status?:
-            | Database["public"]["Enums"]["queue_request_status"]
-            | null
-          salon_id?: string | null
-          service_type?: Database["public"]["Enums"]["service_type"] | null
-          status?: Database["public"]["Enums"]["queue_status"] | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "customers_salon_id_fkey"
-            columns: ["salon_id"]
-            isOneToOne: false
-            referencedRelation: "salons"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_public_queue: {
+        Args: { _salon_ids?: string[] }
+        Returns: {
+          created_at: string
+          estimated_duration_minutes: number
+          id: string
+          queue_number: number
+          request_status: Database["public"]["Enums"]["queue_request_status"]
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+          status: Database["public"]["Enums"]["queue_status"]
+          updated_at: string
+        }[]
+      }
       get_salon_avg_rating: { Args: { salon_uuid: string }; Returns: number }
       get_salon_rating_count: { Args: { salon_uuid: string }; Returns: number }
       is_salon_staff: {

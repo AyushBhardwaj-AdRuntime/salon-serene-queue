@@ -402,6 +402,7 @@ export type Database = {
         Row: {
           address: string | null
           approval_status: string
+          business_proof: string | null
           closing_time: string | null
           created_at: string
           id: string
@@ -412,15 +413,18 @@ export type Database = {
           name: string
           opening_time: string | null
           owner_id: string
+          owner_phone: string | null
           priority_mode: string
           rejection_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          services_offered: string[]
           updated_at: string
         }
         Insert: {
           address?: string | null
           approval_status?: string
+          business_proof?: string | null
           closing_time?: string | null
           created_at?: string
           id?: string
@@ -431,15 +435,18 @@ export type Database = {
           name: string
           opening_time?: string | null
           owner_id: string
+          owner_phone?: string | null
           priority_mode?: string
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          services_offered?: string[]
           updated_at?: string
         }
         Update: {
           address?: string | null
           approval_status?: string
+          business_proof?: string | null
           closing_time?: string | null
           created_at?: string
           id?: string
@@ -450,10 +457,12 @@ export type Database = {
           name?: string
           opening_time?: string | null
           owner_id?: string
+          owner_phone?: string | null
           priority_mode?: string
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          services_offered?: string[]
           updated_at?: string
         }
         Relationships: []
@@ -582,6 +591,7 @@ export type Database = {
         Returns: {
           address: string | null
           approval_status: string
+          business_proof: string | null
           closing_time: string | null
           created_at: string
           id: string
@@ -592,10 +602,12 @@ export type Database = {
           name: string
           opening_time: string | null
           owner_id: string
+          owner_phone: string | null
           priority_mode: string
           rejection_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          services_offered: string[]
           updated_at: string
         }[]
         SetofOptions: {

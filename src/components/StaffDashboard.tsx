@@ -76,9 +76,10 @@ export function StaffDashboard() {
   if (approval && approval !== "approved") {
     return (
       <SalonPendingStatus
-        salonName={mySalon.name}
+        salon={mySalon}
         status={approval}
         rejectionReason={(mySalon as any).rejection_reason}
+        onResubmitted={() => fetchMySalon(user!.id)}
       />
     );
   }

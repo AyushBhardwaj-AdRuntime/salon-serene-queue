@@ -68,7 +68,20 @@ export function StaffDashboard() {
   }
 
   if (!mySalon) {
-    return <RegisterSalonForm />;
+    return <RegisterSalonForm onSuccess={() => fetchMySalon(user!.id)} />;
+  }
+
+  const approval = (mySalon as any).approval_status as "pending" | "approved" | "rejected" | undefined;
+  if (approval && approval !== "approved") {
+    // Lazy import to keep top imports tidy
+    const SalonPendingStatus = require("@/components/SalonPendingStatus").SalonPendingStatus;
+    return (
+      <SalonPendingStatus
+        salonName={mySalon.name}
+        status={approval}
+        rejectionReason={(mySalon as any).rejection_reason}
+      />
+    );
   }
 
   // Filter to only show approved customers in queue

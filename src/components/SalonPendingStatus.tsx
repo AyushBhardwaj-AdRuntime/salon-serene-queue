@@ -1,17 +1,26 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, XCircle, LogOut, ShieldCheck } from "lucide-react";
+import { Clock, XCircle, LogOut, ShieldCheck, Pencil } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/AppHeader";
+import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 
 interface Props {
-  salonName: string;
+  salon: any;
   status: "pending" | "rejected";
   rejectionReason?: string | null;
+  onResubmitted?: () => void;
 }
 
-export function SalonPendingStatus({ salonName, status, rejectionReason }: Props) {
+export function SalonPendingStatus({ salon, status, rejectionReason, onResubmitted }: Props) {
   const { signOut, user } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const salonName = salon?.name ?? "Your salon";
+
+  if (editing) {
+    return <RegisterSalonForm initialSalon={salon} onSuccess={() => { setEditing(false); onResubmitted?.(); }} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">

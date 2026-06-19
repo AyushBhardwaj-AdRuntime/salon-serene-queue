@@ -7,6 +7,8 @@ import LandingPage from "./pages/LandingPage";
 import Salons from "./pages/Salons";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import CustomerCheckin from "./pages/CustomerCheckin";
 import BookAppointment from "./pages/BookAppointment";
 import QueueDisplay from "./pages/QueueDisplay";
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/salons" element={<Salons />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/checkin/:salonId" element={<CustomerCheckin />} />
           <Route path="/book/:salonId" element={<BookAppointment />} />
           <Route path="/display/:salonId" element={<QueueDisplay />} />

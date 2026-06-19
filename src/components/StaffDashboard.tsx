@@ -15,6 +15,7 @@ import { useAppointments } from "@/hooks/useAppointments";
 import { useSalons } from "@/hooks/useSalons";
 import { useAuth } from "@/hooks/useAuth";
 import { RegisterSalonForm } from "@/components/RegisterSalonForm";
+import { SalonPendingStatus } from "@/components/SalonPendingStatus";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift, Scissors } from "lucide-react";
@@ -68,7 +69,18 @@ export function StaffDashboard() {
   }
 
   if (!mySalon) {
-    return <RegisterSalonForm />;
+    return <RegisterSalonForm onSuccess={() => fetchMySalon(user!.id)} />;
+  }
+
+  const approval = (mySalon as any).approval_status as "pending" | "approved" | "rejected" | undefined;
+  if (approval && approval !== "approved") {
+    return (
+      <SalonPendingStatus
+        salonName={mySalon.name}
+        status={approval}
+        rejectionReason={(mySalon as any).rejection_reason}
+      />
+    );
   }
 
   // Filter to only show approved customers in queue

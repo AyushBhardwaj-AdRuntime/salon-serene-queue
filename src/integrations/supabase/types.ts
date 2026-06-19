@@ -401,6 +401,7 @@ export type Database = {
       salons: {
         Row: {
           address: string | null
+          approval_status: string
           closing_time: string | null
           created_at: string
           id: string
@@ -412,10 +413,14 @@ export type Database = {
           opening_time: string | null
           owner_id: string
           priority_mode: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           updated_at: string
         }
         Insert: {
           address?: string | null
+          approval_status?: string
           closing_time?: string | null
           created_at?: string
           id?: string
@@ -427,10 +432,14 @@ export type Database = {
           opening_time?: string | null
           owner_id: string
           priority_mode?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           updated_at?: string
         }
         Update: {
           address?: string | null
+          approval_status?: string
           closing_time?: string | null
           created_at?: string
           id?: string
@@ -442,6 +451,9 @@ export type Database = {
           opening_time?: string | null
           owner_id?: string
           priority_mode?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -480,6 +492,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
       }
       visit_history: {
         Row: {
@@ -544,6 +577,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_list_salons: {
+        Args: { _status?: string }
+        Returns: {
+          address: string | null
+          approval_status: string
+          closing_time: string | null
+          created_at: string
+          id: string
+          is_open: boolean
+          is_queue_paused: boolean
+          latitude: number | null
+          longitude: number | null
+          name: string
+          opening_time: string | null
+          owner_id: string
+          priority_mode: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "salons"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_public_queue: {
         Args: { _salon_ids?: string[] }
         Returns: {
@@ -560,12 +621,20 @@ export type Database = {
       }
       get_salon_avg_rating: { Args: { salon_uuid: string }; Returns: number }
       get_salon_rating_count: { Args: { salon_uuid: string }; Returns: number }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_salon_staff: {
         Args: { _salon_id: string; _user_id: string }
         Returns: boolean
       }
     }
     Enums: {
+      app_role: "admin" | "owner" | "user"
       appointment_status:
         | "scheduled"
         | "confirmed"
@@ -708,6 +777,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "owner", "user"],
       appointment_status: [
         "scheduled",
         "confirmed",

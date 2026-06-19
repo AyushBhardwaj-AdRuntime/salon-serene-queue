@@ -48,7 +48,6 @@ export function RegisterSalonForm({ onSuccess, initialSalon }: RegisterSalonForm
     if (!proof.trim() || proof.trim().length > 300) return "Provide a business proof (license, Instagram, or website).";
     const list = services.split(",").map(s => s.trim()).filter(Boolean);
     if (list.length === 0) return "List at least one service (comma separated).";
-    if (!location) return "Capture your location for nearby search.";
     if (!openingTime || !closingTime) return "Opening and closing times are required.";
     return null;
   };
@@ -66,8 +65,8 @@ export function RegisterSalonForm({ onSuccess, initialSalon }: RegisterSalonForm
       const payload: any = {
         name: name.trim(),
         address: address.trim(),
-        latitude: location!.lat,
-        longitude: location!.lng,
+        latitude: location?.lat ?? null,
+        longitude: location?.lng ?? null,
         owner_phone: phone.trim(),
         business_proof: proof.trim(),
         services_offered: services.split(",").map(s => s.trim()).filter(Boolean),
@@ -144,7 +143,7 @@ export function RegisterSalonForm({ onSuccess, initialSalon }: RegisterSalonForm
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Location *</Label>
+              <Label>Location <span className="text-xs text-muted-foreground font-normal">(optional, helps customers find you)</span></Label>
               <Button type="button" variant="outline" className="w-full" onClick={handleGetLocation} disabled={isGettingLocation}>
                 {isGettingLocation ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Getting location...</>)
                   : location ? (<><MapPin className="mr-2 h-4 w-4 text-green-500" />Location captured ({location.lat.toFixed(3)}, {location.lng.toFixed(3)})</>)

@@ -36,56 +36,33 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
     }
   }, [salons]);
 
-  // Fetch queue for all salons
+  // Fetch queue for all salons via PII-free RPC, with polling
   useEffect(() => {
     const fetchAllQueues = async () => {
       if (salons.length === 0) return;
 
-      const { data, error } = await supabase
-        .from("customers")
-        .select("*")
-        .in("salon_id", salons.map((s) => s.id))
-        .in("status", ["Waiting", "Serving"])
-        .eq("request_status", "approved")
-        .order("queue_number", { ascending: true });
+      const { data, error } = await supabase.rpc("get_public_queue", {
+        _salon_ids: salons.map((s) => s.id),
+      });
 
       if (error) {
         console.error("Error fetching queues:", error);
         return;
       }
 
-      // Group by salon_id
       const grouped: Record<string, Customer[]> = {};
-      data?.forEach((customer) => {
+      (data || []).forEach((customer: any) => {
         if (customer.salon_id) {
-          if (!grouped[customer.salon_id]) {
-            grouped[customer.salon_id] = [];
-          }
-          grouped[customer.salon_id].push(customer);
+          if (!grouped[customer.salon_id]) grouped[customer.salon_id] = [];
+          grouped[customer.salon_id].push(customer as Customer);
         }
       });
       setSalonQueues(grouped);
     };
 
     fetchAllQueues();
-
-    // Subscribe to realtime updates
-    const channel = supabase
-      .channel("public-queue-view")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "customers",
-        },
-        () => fetchAllQueues()
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    const interval = setInterval(fetchAllQueues, 5000);
+    return () => clearInterval(interval);
   }, [salons]);
 
   const getQueueStats = (salonId: string) => {

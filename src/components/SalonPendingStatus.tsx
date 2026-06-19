@@ -78,6 +78,11 @@ export function SalonPendingStatus({ salon, status, rejectionReason, onResubmitt
             <div className="text-xs text-muted-foreground text-center">
               Signed in as {user?.email}
             </div>
+            {status === "rejected" && (
+              <Button className="w-full" onClick={() => setEditing(true)}>
+                <Pencil className="w-4 h-4 mr-2" /> Edit & Resubmit
+              </Button>
+            )}
             <Button variant="outline" className="w-full" onClick={signOut}>
               <LogOut className="w-4 h-4 mr-2" /> Sign Out
             </Button>

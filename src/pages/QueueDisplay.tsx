@@ -41,42 +41,23 @@ export default function QueueDisplay() {
     fetchSalon();
   }, [salonId]);
 
-  // Fetch and subscribe to queue updates
+  // Fetch and poll queue updates (PII-free public RPC)
   useEffect(() => {
     if (!salonId) return;
 
     const fetchCustomers = async () => {
-      const { data } = await supabase
-        .from("customers")
-        .select("*")
-        .eq("salon_id", salonId)
-        .in("status", ["Waiting", "Serving"])
-        .eq("request_status", "approved")
-        .order("queue_number", { ascending: true });
-
-      setCustomers(data || []);
+      const { data } = await supabase.rpc("get_public_queue", {
+        _salon_ids: [salonId],
+      });
+      const sorted = (data || []).sort(
+        (a: any, b: any) => a.queue_number - b.queue_number
+      );
+      setCustomers(sorted as Customer[]);
     };
 
     fetchCustomers();
-
-    // Realtime subscription
-    const channel = supabase
-      .channel(`display-${salonId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "customers",
-          filter: `salon_id=eq.${salonId}`,
-        },
-        () => fetchCustomers()
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    const interval = setInterval(fetchCustomers, 5000);
+    return () => clearInterval(interval);
   }, [salonId]);
 
   const servingCustomer = customers.find((c) => c.status === "Serving");
@@ -134,9 +115,6 @@ export default function QueueDisplay() {
                 <div className="text-9xl font-bold text-primary-foreground mb-6">
                   #{servingCustomer.queue_number}
                 </div>
-                <div className="text-3xl font-medium text-primary-foreground/90">
-                  {servingCustomer.customer_name}
-                </div>
                 <div className="text-xl text-primary-foreground/70 mt-2">
                   {servingCustomer.service_type}
                 </div>
@@ -176,9 +154,6 @@ export default function QueueDisplay() {
                       #{customer.queue_number}
                     </div>
                     <div className="flex-1">
-                      <div className="text-2xl font-medium text-foreground">
-                        {customer.customer_name}
-                      </div>
                       <div className="text-lg text-muted-foreground flex items-center gap-2">
                         <span>{customer.service_type}</span>
                         <span className="text-sm">• ~{customer.estimated_duration_minutes} min</span>

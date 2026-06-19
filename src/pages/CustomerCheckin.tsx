@@ -75,15 +75,11 @@ export default function CustomerCheckin() {
         if (error) throw error;
         setSalon(data);
 
-        // Also fetch current queue count (only approved customers)
-        const { count } = await supabase
-          .from("customers")
-          .select("*", { count: "exact", head: true })
-          .eq("salon_id", salonId)
-          .eq("request_status", "approved")
-          .in("status", ["Waiting", "Serving"]);
-
-        setQueueAhead(count || 0);
+        // Also fetch current queue count via public RPC
+        const { data: queueRows } = await supabase.rpc("get_public_queue", {
+          _salon_ids: [salonId],
+        });
+        setQueueAhead((queueRows || []).length);
       } catch (error) {
         console.error("Error fetching salon:", error);
         toast({

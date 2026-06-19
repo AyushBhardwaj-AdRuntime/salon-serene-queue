@@ -544,6 +544,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_queue: {
+        Args: { _salon_ids?: string[] }
+        Returns: {
+          created_at: string
+          estimated_duration_minutes: number
+          id: string
+          queue_number: number
+          request_status: Database["public"]["Enums"]["queue_request_status"]
+          salon_id: string
+          service_type: Database["public"]["Enums"]["service_type"]
+          status: Database["public"]["Enums"]["queue_status"]
+          updated_at: string
+        }[]
+      }
       get_salon_avg_rating: { Args: { salon_uuid: string }; Returns: number }
       get_salon_rating_count: { Args: { salon_uuid: string }; Returns: number }
       is_salon_staff: {

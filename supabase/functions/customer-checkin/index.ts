@@ -92,13 +92,32 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Look up service-specific duration when service_id provided
+    let duration = SERVICE_DURATIONS[service_type];
+    let resolvedServiceId: string | null = service_id ?? null;
+    if (resolvedServiceId) {
+      const { data: svc } = await supabase
+        .from("services")
+        .select("id, duration_minutes, is_active, salon_id")
+        .eq("id", resolvedServiceId)
+        .maybeSingle();
+      if (!svc || svc.salon_id !== salon_id || svc.is_active === false) {
+        return new Response(
+          JSON.stringify({ error: "Selected service is not available" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      duration = svc.duration_minutes;
+    }
+
     // Insert customer into queue using service role (bypasses RLS)
     const { data: customer, error: insertError } = await supabase
       .from("customers")
       .insert({
         customer_name: trimmedName,
         service_type,
-        estimated_duration_minutes: SERVICE_DURATIONS[service_type],
+        service_id: resolvedServiceId,
+        estimated_duration_minutes: duration,
         salon_id,
         phone_number: phone_number?.trim() || null,
         request_status: require_approval ? "pending" : "approved",
@@ -119,7 +138,7 @@ Deno.serve(async (req) => {
         success: true,
         queue_number: customer.queue_number,
         salon_name: salon.name,
-        estimated_duration: SERVICE_DURATIONS[service_type],
+        estimated_duration: duration,
         request_status: require_approval ? "pending" : "approved",
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

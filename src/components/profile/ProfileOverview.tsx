@@ -30,7 +30,7 @@ export function ProfileOverview({ salon, onJumpTab }: Props) {
     const load = async () => {
       const [agg, popular, queue, appts] = await Promise.all([
         supabase.from("analytics_daily").select("total_customers, avg_wait_time_minutes").eq("salon_id", salon.id),
-        supabase.from("service_analytics").select("service_type, total_count").eq("salon_id", salon.id).order("total_count", { ascending: false }).limit(1),
+        supabase.from("service_analytics").select("service_type, count").eq("salon_id", salon.id),
         supabase.from("customers").select("id", { count: "exact", head: true }).eq("salon_id", salon.id).in("status", ["Waiting", "Serving"]).eq("request_status", "approved"),
         supabase.from("appointments").select("id", { count: "exact", head: true }).eq("salon_id", salon.id).gte("appointment_time", `${today}T00:00:00`).lte("appointment_time", `${today}T23:59:59`),
       ]);
@@ -39,7 +39,9 @@ export function ProfileOverview({ salon, onJumpTab }: Props) {
       const totalServed = (agg.data || []).reduce((acc, r: any) => acc + (r.total_customers || 0), 0);
       const waitRows = (agg.data || []).filter((r: any) => r.avg_wait_time_minutes);
       const avgWait = waitRows.length ? Math.round(waitRows.reduce((a, r: any) => a + r.avg_wait_time_minutes, 0) / waitRows.length) : 0;
-      const popularService = popular.data?.[0]?.service_type ?? null;
+      const serviceTotals = new Map<string, number>();
+      (popular.data || []).forEach((r: any) => serviceTotals.set(r.service_type, (serviceTotals.get(r.service_type) || 0) + (r.count || 0)));
+      const popularService = [...serviceTotals.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
       setStats({
         totalServed,

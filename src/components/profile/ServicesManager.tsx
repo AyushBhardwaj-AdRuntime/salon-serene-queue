@@ -23,12 +23,14 @@ export function ServicesManager({ salonId }: Props) {
     if (!draft.name.trim()) return toast({ title: "Service name required", variant: "destructive" });
     const price = Math.max(0, Math.round(Number(draft.price_rupees || 0) * 100));
     const dur = Math.max(1, Number(draft.duration_minutes || 15));
+    const cap = Math.min(50, Math.max(1, Number(draft.parallel_capacity || 1)));
     try {
       await create({
         name: draft.name.trim(),
         price_cents: price,
         duration_minutes: dur,
         category: draft.category.trim() || null,
+        parallel_capacity: cap,
         is_active: true,
       } as any);
       setDraft(EMPTY);
@@ -45,6 +47,7 @@ export function ServicesManager({ salonId }: Props) {
       price_rupees: String(s.price_cents / 100),
       duration_minutes: String(s.duration_minutes),
       category: s.category ?? "",
+      parallel_capacity: String((s as any).parallel_capacity ?? 1),
     });
   };
 
@@ -56,7 +59,8 @@ export function ServicesManager({ salonId }: Props) {
         price_cents: Math.max(0, Math.round(Number(editDraft.price_rupees || 0) * 100)),
         duration_minutes: Math.max(1, Number(editDraft.duration_minutes || 15)),
         category: editDraft.category.trim() || null,
-      });
+        parallel_capacity: Math.min(50, Math.max(1, Number(editDraft.parallel_capacity || 1))),
+      } as any);
       setEditingId(null);
       toast({ title: "Service updated" });
     } catch (e: any) {

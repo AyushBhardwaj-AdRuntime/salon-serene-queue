@@ -111,10 +111,11 @@ export function ServicesManager({ salonId }: Props) {
             : (
               <div className="divide-y">
                 {services.map((s) => editingId === s.id ? (
-                  <div key={s.id} className="py-3 grid gap-2 md:grid-cols-5 items-end">
+                  <div key={s.id} className="py-3 grid gap-2 md:grid-cols-6 items-end">
                     <Input className="md:col-span-2" value={editDraft.name} onChange={(e) => setEditDraft({ ...editDraft, name: e.target.value })} />
                     <Input type="number" min={0} value={editDraft.price_rupees} onChange={(e) => setEditDraft({ ...editDraft, price_rupees: e.target.value })} />
                     <Input type="number" min={1} value={editDraft.duration_minutes} onChange={(e) => setEditDraft({ ...editDraft, duration_minutes: e.target.value })} />
+                    <Input type="number" min={1} max={50} value={editDraft.parallel_capacity} onChange={(e) => setEditDraft({ ...editDraft, parallel_capacity: e.target.value })} />
                     <div className="flex gap-2">
                       <Input value={editDraft.category} onChange={(e) => setEditDraft({ ...editDraft, category: e.target.value })} />
                       <Button size="icon" onClick={submitEdit}><Save className="w-4 h-4" /></Button>
@@ -127,6 +128,7 @@ export function ServicesManager({ salonId }: Props) {
                       <div className="font-medium flex items-center gap-2">
                         {s.name}
                         {s.category && <Badge variant="outline">{s.category}</Badge>}
+                        <Badge variant="secondary">{(s as any).parallel_capacity ?? 1} at a time</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">₹{(s.price_cents / 100).toFixed(0)} · {s.duration_minutes} min</p>
                     </div>

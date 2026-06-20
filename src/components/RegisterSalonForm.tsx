@@ -75,16 +75,15 @@ export function RegisterSalonForm({ onSuccess, initialSalon }: RegisterSalonForm
       };
 
       if (isEdit) {
-        // Edit & resubmit: also flip to pending (trigger clears review fields)
-        payload.approval_status = "pending";
         const { error } = await supabase.from("salons").update(payload).eq("id", initialSalon.id);
         if (error) throw error;
-        toast({ title: "Resubmitted for review" });
+        toast({ title: "Salon updated" });
       } else {
         payload.owner_id = user.id;
+        payload.approval_status = "approved";
         const { error } = await supabase.from("salons").insert(payload);
         if (error) throw error;
-        toast({ title: "Salon submitted", description: "Pending admin review." });
+        toast({ title: "Salon registered", description: "You're all set." });
       }
       onSuccess?.();
     } catch (error: any) {

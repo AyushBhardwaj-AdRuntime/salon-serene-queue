@@ -101,6 +101,20 @@ export default function CustomerCheckin() {
           _salon_ids: [salonId],
         });
         setQueueAhead((queueRows || []).length);
+
+        // Fetch salon's active services so the customer picks a real one
+        const { data: svcRows } = await supabase
+          .from("services")
+          .select("id, name, duration_minutes, price_cents, parallel_capacity")
+          .eq("salon_id", salonId)
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true });
+        const svcs = (svcRows || []) as SalonService[];
+        setSalonServices(svcs);
+        if (svcs.length > 0) {
+          setSelectedServiceId(svcs[0].id);
+          setServiceType(inferServiceType(svcs[0].name));
+        }
       } catch (error) {
         console.error("Error fetching salon:", error);
         toast({

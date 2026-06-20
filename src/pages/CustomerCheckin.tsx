@@ -28,6 +28,25 @@ const SERVICE_TYPES: ServiceType[] = [
   "Full Package",
 ];
 
+// Best-effort mapping from a free-text service name to the legacy enum
+function inferServiceType(name: string): ServiceType {
+  const n = name.toLowerCase();
+  if (n.includes("color") || n.includes("colour")) return "Hair Color";
+  if (n.includes("beard")) return "Beard Trim";
+  if (n.includes("shave")) return "Shave";
+  if (n.includes("facial") || n.includes("clean")) return "Facial";
+  if (n.includes("package") || n.includes("combo")) return "Full Package";
+  return "Haircut";
+}
+
+interface SalonService {
+  id: string;
+  name: string;
+  duration_minutes: number;
+  price_cents: number;
+  parallel_capacity: number;
+}
+
 interface Salon {
   id: string;
   name: string;

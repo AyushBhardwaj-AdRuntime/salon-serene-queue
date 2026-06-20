@@ -137,15 +137,17 @@ export default function CustomerCheckin() {
     setIsSubmitting(true);
 
     try {
-      const response = await supabase.functions.invoke("customer-checkin", {
-        body: {
-          salon_id: salonId,
-          customer_name: name.trim(),
-          service_type: serviceType,
-          phone_number: phone.trim() || undefined,
-          require_approval: false, // Auto-approve for now, can be made configurable
-        },
-      });
+      const body: Record<string, unknown> = {
+        salon_id: salonId,
+        customer_name: name.trim(),
+        service_type: serviceType,
+        phone_number: phone.trim() || undefined,
+        require_approval: false,
+      };
+      if (selectedServiceId && selectedServiceId !== "legacy") {
+        body.service_id = selectedServiceId;
+      }
+      const response = await supabase.functions.invoke("customer-checkin", { body });
 
       if (response.error) {
         throw new Error(response.error.message || "Failed to check in");

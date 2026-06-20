@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface Props { salonId: string; }
 
-const EMPTY = { name: "", price_rupees: "", duration_minutes: "15", category: "" };
+const EMPTY = { name: "", price_rupees: "", duration_minutes: "15", category: "", parallel_capacity: "1" };
 
 export function ServicesManager({ salonId }: Props) {
   const { services, isLoading, create, update, remove } = useServices(salonId);

@@ -53,7 +53,12 @@ export function useCustomers(salonId?: string) {
   };
 
   // Add customer
-  const addCustomer = async (name: string, serviceType: ServiceType) => {
+  const addCustomer = async (
+    name: string,
+    serviceType: ServiceType,
+    serviceId?: string | null,
+    durationMinutes?: number,
+  ) => {
     if (!salonId) {
       toast({
         title: "Error",
@@ -62,14 +67,15 @@ export function useCustomers(salonId?: string) {
       });
       return;
     }
-    
+
     try {
       const { error } = await supabase.from("customers").insert({
         customer_name: name.trim(),
         service_type: serviceType,
-        estimated_duration_minutes: SERVICE_DURATIONS[serviceType],
+        service_id: serviceId ?? null,
+        estimated_duration_minutes: durationMinutes ?? SERVICE_DURATIONS[serviceType],
         salon_id: salonId,
-      });
+      } as any);
 
       if (error) throw error;
 

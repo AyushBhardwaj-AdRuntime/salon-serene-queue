@@ -28,6 +28,25 @@ const SERVICE_TYPES: ServiceType[] = [
   "Full Package",
 ];
 
+// Best-effort mapping from a free-text service name to the legacy enum
+function inferServiceType(name: string): ServiceType {
+  const n = name.toLowerCase();
+  if (n.includes("color") || n.includes("colour")) return "Hair Color";
+  if (n.includes("beard")) return "Beard Trim";
+  if (n.includes("shave")) return "Shave";
+  if (n.includes("facial") || n.includes("clean")) return "Facial";
+  if (n.includes("package") || n.includes("combo")) return "Full Package";
+  return "Haircut";
+}
+
+interface SalonService {
+  id: string;
+  name: string;
+  duration_minutes: number;
+  price_cents: number;
+  parallel_capacity: number;
+}
+
 interface Salon {
   id: string;
   name: string;
@@ -54,6 +73,8 @@ export default function CustomerCheckin() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [serviceType, setServiceType] = useState<ServiceType>("Haircut");
+  const [salonServices, setSalonServices] = useState<SalonService[]>([]);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | "legacy">("legacy");
   const [checkinResult, setCheckinResult] = useState<CheckinResult | null>(null);
   const [queueAhead, setQueueAhead] = useState(0);
 
@@ -80,6 +101,20 @@ export default function CustomerCheckin() {
           _salon_ids: [salonId],
         });
         setQueueAhead((queueRows || []).length);
+
+        // Fetch salon's active services so the customer picks a real one
+        const { data: svcRows } = await supabase
+          .from("services")
+          .select("id, name, duration_minutes, price_cents, parallel_capacity")
+          .eq("salon_id", salonId)
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true });
+        const svcs = (svcRows || []) as SalonService[];
+        setSalonServices(svcs);
+        if (svcs.length > 0) {
+          setSelectedServiceId(svcs[0].id);
+          setServiceType(inferServiceType(svcs[0].name));
+        }
       } catch (error) {
         console.error("Error fetching salon:", error);
         toast({
@@ -102,15 +137,17 @@ export default function CustomerCheckin() {
     setIsSubmitting(true);
 
     try {
-      const response = await supabase.functions.invoke("customer-checkin", {
-        body: {
-          salon_id: salonId,
-          customer_name: name.trim(),
-          service_type: serviceType,
-          phone_number: phone.trim() || undefined,
-          require_approval: false, // Auto-approve for now, can be made configurable
-        },
-      });
+      const body: Record<string, unknown> = {
+        salon_id: salonId,
+        customer_name: name.trim(),
+        service_type: serviceType,
+        phone_number: phone.trim() || undefined,
+        require_approval: false,
+      };
+      if (selectedServiceId && selectedServiceId !== "legacy") {
+        body.service_id = selectedServiceId;
+      }
+      const response = await supabase.functions.invoke("customer-checkin", { body });
 
       if (response.error) {
         throw new Error(response.error.message || "Failed to check in");
@@ -301,27 +338,54 @@ export default function CustomerCheckin() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="service">Service Type *</Label>
-                <Select
-                  value={serviceType}
-                  onValueChange={(value) => setServiceType(value as ServiceType)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SERVICE_TYPES.map((service) => (
-                      <SelectItem key={service} value={service}>
-                        <span className="flex items-center justify-between w-full gap-4">
-                          <span>{service}</span>
-                          <span className="text-muted-foreground text-xs">
-                            ~{SERVICE_DURATIONS[service]} min
+                <Label htmlFor="service">Service *</Label>
+                {salonServices.length > 0 ? (
+                  <Select
+                    value={selectedServiceId}
+                    onValueChange={(value) => {
+                      setSelectedServiceId(value);
+                      const svc = salonServices.find((s) => s.id === value);
+                      if (svc) setServiceType(inferServiceType(svc.name));
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {salonServices.map((svc) => (
+                        <SelectItem key={svc.id} value={svc.id}>
+                          <span className="flex items-center justify-between w-full gap-4">
+                            <span>{svc.name}</span>
+                            <span className="text-muted-foreground text-xs">
+                              ₹{(svc.price_cents / 100).toFixed(0)} · ~{svc.duration_minutes} min · {svc.parallel_capacity} at a time
+                            </span>
                           </span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Select
+                    value={serviceType}
+                    onValueChange={(value) => setServiceType(value as ServiceType)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SERVICE_TYPES.map((service) => (
+                        <SelectItem key={service} value={service}>
+                          <span className="flex items-center justify-between w-full gap-4">
+                            <span>{service}</span>
+                            <span className="text-muted-foreground text-xs">
+                              ~{SERVICE_DURATIONS[service]} min
+                            </span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               {queueAhead > 0 && (

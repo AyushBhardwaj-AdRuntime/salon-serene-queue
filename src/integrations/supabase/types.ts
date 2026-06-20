@@ -112,6 +112,7 @@ export type Database = {
           queue_number: number
           request_status: Database["public"]["Enums"]["queue_request_status"]
           salon_id: string | null
+          service_id: string | null
           service_type: Database["public"]["Enums"]["service_type"]
           status: Database["public"]["Enums"]["queue_status"]
           updated_at: string
@@ -122,9 +123,10 @@ export type Database = {
           estimated_duration_minutes?: number
           id?: string
           phone_number?: string | null
-          queue_number?: number
+          queue_number: number
           request_status?: Database["public"]["Enums"]["queue_request_status"]
           salon_id?: string | null
+          service_id?: string | null
           service_type: Database["public"]["Enums"]["service_type"]
           status?: Database["public"]["Enums"]["queue_status"]
           updated_at?: string
@@ -138,6 +140,7 @@ export type Database = {
           queue_number?: number
           request_status?: Database["public"]["Enums"]["queue_request_status"]
           salon_id?: string | null
+          service_id?: string | null
           service_type?: Database["public"]["Enums"]["service_type"]
           status?: Database["public"]["Enums"]["queue_status"]
           updated_at?: string
@@ -148,6 +151,13 @@ export type Database = {
             columns: ["salon_id"]
             isOneToOne: false
             referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
             referencedColumns: ["id"]
           },
         ]
@@ -659,6 +669,7 @@ export type Database = {
           id: string
           is_active: boolean
           name: string
+          parallel_capacity: number
           price_cents: number
           salon_id: string
           sort_order: number
@@ -671,6 +682,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name: string
+          parallel_capacity?: number
           price_cents?: number
           salon_id: string
           sort_order?: number
@@ -683,6 +695,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+          parallel_capacity?: number
           price_cents?: number
           salon_id?: string
           sort_order?: number

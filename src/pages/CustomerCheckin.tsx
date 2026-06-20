@@ -338,27 +338,54 @@ export default function CustomerCheckin() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="service">Service Type *</Label>
-                <Select
-                  value={serviceType}
-                  onValueChange={(value) => setServiceType(value as ServiceType)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SERVICE_TYPES.map((service) => (
-                      <SelectItem key={service} value={service}>
-                        <span className="flex items-center justify-between w-full gap-4">
-                          <span>{service}</span>
-                          <span className="text-muted-foreground text-xs">
-                            ~{SERVICE_DURATIONS[service]} min
+                <Label htmlFor="service">Service *</Label>
+                {salonServices.length > 0 ? (
+                  <Select
+                    value={selectedServiceId}
+                    onValueChange={(value) => {
+                      setSelectedServiceId(value);
+                      const svc = salonServices.find((s) => s.id === value);
+                      if (svc) setServiceType(inferServiceType(svc.name));
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {salonServices.map((svc) => (
+                        <SelectItem key={svc.id} value={svc.id}>
+                          <span className="flex items-center justify-between w-full gap-4">
+                            <span>{svc.name}</span>
+                            <span className="text-muted-foreground text-xs">
+                              ₹{(svc.price_cents / 100).toFixed(0)} · ~{svc.duration_minutes} min · {svc.parallel_capacity} at a time
+                            </span>
                           </span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Select
+                    value={serviceType}
+                    onValueChange={(value) => setServiceType(value as ServiceType)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SERVICE_TYPES.map((service) => (
+                        <SelectItem key={service} value={service}>
+                          <span className="flex items-center justify-between w-full gap-4">
+                            <span>{service}</span>
+                            <span className="text-muted-foreground text-xs">
+                              ~{SERVICE_DURATIONS[service]} min
+                            </span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               {queueAhead > 0 && (

@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { salon_id, customer_name, service_type, phone_number, require_approval }: CheckinRequest = await req.json();
+    const { salon_id, customer_name, service_type, service_id, phone_number, require_approval }: CheckinRequest = await req.json();
 
     // Validate inputs
     if (!salon_id || !customer_name || !service_type) {

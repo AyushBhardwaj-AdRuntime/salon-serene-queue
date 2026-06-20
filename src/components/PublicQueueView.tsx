@@ -173,6 +173,13 @@ export function PublicQueueView({ onLoginClick }: PublicQueueViewProps) {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => navigate(`/salon/${selectedSalon.id}`)}
+              >
+                View Profile
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => navigate(`/checkin/${selectedSalon.id}`)}
               >
                 <Users className="w-4 h-4 mr-2" />

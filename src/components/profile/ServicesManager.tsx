@@ -75,7 +75,7 @@ export function ServicesManager({ salonId }: Props) {
           <CardTitle className="flex items-center gap-2"><Plus className="w-5 h-5" /> Add a Service</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-5">
+          <div className="grid gap-3 md:grid-cols-6">
             <div className="md:col-span-2 space-y-1">
               <Label>Name</Label>
               <Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="Haircut" />
@@ -89,8 +89,12 @@ export function ServicesManager({ salonId }: Props) {
               <Input type="number" min={1} value={draft.duration_minutes} onChange={(e) => setDraft({ ...draft, duration_minutes: e.target.value })} />
             </div>
             <div className="space-y-1">
+              <Label>Customers at a time</Label>
+              <Input type="number" min={1} max={50} value={draft.parallel_capacity} onChange={(e) => setDraft({ ...draft, parallel_capacity: e.target.value })} placeholder="1" />
+            </div>
+            <div className="space-y-1">
               <Label>Category</Label>
-              <Input value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} placeholder="Hair / Skin / Beard" />
+              <Input value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} placeholder="Hair / Skin" />
             </div>
           </div>
           <Button className="mt-4" onClick={submitNew}><Plus className="w-4 h-4 mr-2" /> Add Service</Button>

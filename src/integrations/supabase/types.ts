@@ -456,6 +456,50 @@ export type Database = {
           },
         ]
       }
+      salon_media: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["salon_media_kind"]
+          salon_id: string
+          sort_order: number
+          storage_path: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["salon_media_kind"]
+          salon_id: string
+          sort_order?: number
+          storage_path?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["salon_media_kind"]
+          salon_id?: string
+          sort_order?: number
+          storage_path?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_media_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       salon_staff: {
         Row: {
           created_at: string
@@ -491,11 +535,16 @@ export type Database = {
           approval_status: string
           business_proof: string | null
           closing_time: string | null
+          contact_number: string | null
           created_at: string
+          description: string | null
+          google_maps_url: string | null
           id: string
+          instagram_url: string | null
           is_open: boolean
           is_queue_paused: boolean
           latitude: number | null
+          logo_url: string | null
           longitude: number | null
           name: string
           opening_time: string | null
@@ -507,17 +556,23 @@ export type Database = {
           reviewed_by: string | null
           services_offered: string[]
           updated_at: string
+          website_url: string | null
         }
         Insert: {
           address?: string | null
           approval_status?: string
           business_proof?: string | null
           closing_time?: string | null
+          contact_number?: string | null
           created_at?: string
+          description?: string | null
+          google_maps_url?: string | null
           id?: string
+          instagram_url?: string | null
           is_open?: boolean
           is_queue_paused?: boolean
           latitude?: number | null
+          logo_url?: string | null
           longitude?: number | null
           name: string
           opening_time?: string | null
@@ -529,17 +584,23 @@ export type Database = {
           reviewed_by?: string | null
           services_offered?: string[]
           updated_at?: string
+          website_url?: string | null
         }
         Update: {
           address?: string | null
           approval_status?: string
           business_proof?: string | null
           closing_time?: string | null
+          contact_number?: string | null
           created_at?: string
+          description?: string | null
+          google_maps_url?: string | null
           id?: string
+          instagram_url?: string | null
           is_open?: boolean
           is_queue_paused?: boolean
           latitude?: number | null
+          logo_url?: string | null
           longitude?: number | null
           name?: string
           opening_time?: string | null
@@ -551,6 +612,7 @@ export type Database = {
           reviewed_by?: string | null
           services_offered?: string[]
           updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -582,6 +644,106 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "service_analytics_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          category: string | null
+          created_at: string
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          name: string
+          price_cents: number
+          salon_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          price_cents?: number
+          salon_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          price_cents?: number
+          salon_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staff_members: {
+        Row: {
+          bio: string | null
+          created_at: string
+          experience_years: number | null
+          id: string
+          is_featured: boolean
+          name: string
+          photo_url: string | null
+          role: string | null
+          salon_id: string
+          sort_order: number
+          specialization: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id?: string
+          is_featured?: boolean
+          name: string
+          photo_url?: string | null
+          role?: string | null
+          salon_id: string
+          sort_order?: number
+          specialization?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id?: string
+          is_featured?: boolean
+          name?: string
+          photo_url?: string | null
+          role?: string | null
+          salon_id?: string
+          sort_order?: number
+          specialization?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_members_salon_id_fkey"
             columns: ["salon_id"]
             isOneToOne: false
             referencedRelation: "salons"
@@ -704,11 +866,16 @@ export type Database = {
           approval_status: string
           business_proof: string | null
           closing_time: string | null
+          contact_number: string | null
           created_at: string
+          description: string | null
+          google_maps_url: string | null
           id: string
+          instagram_url: string | null
           is_open: boolean
           is_queue_paused: boolean
           latitude: number | null
+          logo_url: string | null
           longitude: number | null
           name: string
           opening_time: string | null
@@ -720,6 +887,7 @@ export type Database = {
           reviewed_by: string | null
           services_offered: string[]
           updated_at: string
+          website_url: string | null
         }[]
         SetofOptions: {
           from: "*"
@@ -791,6 +959,12 @@ export type Database = {
         | "no_show"
       queue_request_status: "pending" | "approved" | "rejected"
       queue_status: "Waiting" | "Serving" | "Done"
+      salon_media_kind:
+        | "logo"
+        | "gallery"
+        | "interior"
+        | "waiting"
+        | "service_area"
       service_type:
         | "Haircut"
         | "Shave"
@@ -935,6 +1109,13 @@ export const Constants = {
       ],
       queue_request_status: ["pending", "approved", "rejected"],
       queue_status: ["Waiting", "Serving", "Done"],
+      salon_media_kind: [
+        "logo",
+        "gallery",
+        "interior",
+        "waiting",
+        "service_area",
+      ],
       service_type: [
         "Haircut",
         "Shave",

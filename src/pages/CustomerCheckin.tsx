@@ -73,6 +73,8 @@ export default function CustomerCheckin() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [serviceType, setServiceType] = useState<ServiceType>("Haircut");
+  const [salonServices, setSalonServices] = useState<SalonService[]>([]);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | "legacy">("legacy");
   const [checkinResult, setCheckinResult] = useState<CheckinResult | null>(null);
   const [queueAhead, setQueueAhead] = useState(0);
 

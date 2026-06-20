@@ -72,17 +72,7 @@ export function StaffDashboard() {
     return <RegisterSalonForm onSuccess={() => fetchMySalon(user!.id)} />;
   }
 
-  const approval = (mySalon as any).approval_status as "pending" | "approved" | "rejected" | undefined;
-  if (approval && approval !== "approved") {
-    return (
-      <SalonPendingStatus
-        salon={mySalon}
-        status={approval}
-        rejectionReason={(mySalon as any).rejection_reason}
-        onResubmitted={() => fetchMySalon(user!.id)}
-      />
-    );
-  }
+  // Approval workflow removed — owners go straight to the dashboard.
 
   // Filter to only show approved customers in queue
   const approvedCustomers = customers.filter(

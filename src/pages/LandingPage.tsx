@@ -40,7 +40,7 @@ export default function LandingPage() {
               Find Salons
             </Button>
             <Button size="sm" onClick={() => navigate("/login")} className="rounded-full px-5">
-              Staff Login
+              Own a Salon ?
             </Button>
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function LandingPage() {
                 className="rounded-full px-8 text-base gap-2"
                 onClick={() => navigate("/login")}
               >
-                Staff Login
+                Own a Salon ?&nbsp;
               </Button>
             </div>
           </div>

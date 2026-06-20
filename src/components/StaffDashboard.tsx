@@ -16,9 +16,10 @@ import { useSalons } from "@/hooks/useSalons";
 import { useAuth } from "@/hooks/useAuth";
 import { RegisterSalonForm } from "@/components/RegisterSalonForm";
 import { SalonPendingStatus } from "@/components/SalonPendingStatus";
+import { SalonProfileManager } from "@/components/profile/SalonProfileManager";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift, Scissors } from "lucide-react";
+import { LogOut, Store, Users, Calendar, BarChart, Settings, Gift, Scissors, UserCog } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function StaffDashboard() {
@@ -109,10 +110,14 @@ export function StaffDashboard() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/80 p-1 rounded-xl">
+          <TabsList className="grid w-full grid-cols-6 mb-6 bg-muted/80 p-1 rounded-xl">
             <TabsTrigger value="queue" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               <span className="hidden sm:inline">Queue</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <UserCog className="w-4 h-4" />
+              <span className="hidden sm:inline">Profile</span>
             </TabsTrigger>
             <TabsTrigger value="appointments" className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
@@ -157,6 +162,11 @@ export function StaffDashboard() {
               getEstimatedWaitTime={getEstimatedWaitTime}
               salonId={mySalon.id}
             />
+          </TabsContent>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            <SalonProfileManager salon={mySalon as any} onUpdate={handleSettingsUpdate} />
           </TabsContent>
 
           {/* Appointments Tab */}

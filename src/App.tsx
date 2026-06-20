@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CustomerCheckin from "./pages/CustomerCheckin";
 import BookAppointment from "./pages/BookAppointment";
 import QueueDisplay from "./pages/QueueDisplay";
+import SalonProfile from "./pages/SalonProfile";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./components/ThemeProvider";
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/checkin/:salonId" element={<CustomerCheckin />} />
           <Route path="/book/:salonId" element={<BookAppointment />} />
           <Route path="/display/:salonId" element={<QueueDisplay />} />
+          <Route path="/salon/:salonId" element={<SalonProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -9,6 +9,7 @@ interface CheckinRequest {
   salon_id: string;
   customer_name: string;
   service_type: "Haircut" | "Shave" | "Facial" | "Hair Color" | "Beard Trim" | "Full Package";
+  service_id?: string | null;
   phone_number?: string;
   require_approval?: boolean;
 }
